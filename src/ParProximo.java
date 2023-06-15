@@ -1,38 +1,48 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ParProximo {
 
-    public static Map<Double, List<Ponto>> executar(List<Ponto> pontos) {
-        double menorDistancia = 0;
-        Ponto pontoA = null;
-        Ponto pontoB = null;
-        int n = pontos.size();
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n - 1; j++) {
-                pontoA = pontos.get(i);
-                pontoB = pontos.get(j);
-                menorDistancia = getMenorDistancia(menorDistancia, pontoA, pontoB);
+    public static double executar(List<Ponto> pontos) {
+        Collections.sort(pontos);
 
+        if (pontos.size() <= 3) {
+            return forcaBruta(pontos);
+        }
+
+        int div = pontos.size() / 2;
+
+        double distanciaUM = executar(pontos.subList(0, div));
+        double distanciaDois = executar(pontos.subList(div, pontos.size()));
+
+        double menorDistancia = distanciaUM < distanciaDois ? distanciaUM : distanciaDois;
+        double menorEntreConjuntos = menorEntreConjuntos(pontos, menorDistancia, div);
+
+        return menorDistancia < menorEntreConjuntos ? menorDistancia : menorEntreConjuntos;
+    }
+
+    private static double menorEntreConjuntos(List<Ponto> pontos, double dist, int div) {
+        double a = pontos.get(div).getX() + dist;
+        double b = pontos.get(div).getX() - dist;
+        List<Ponto> selecionados = pontos.stream()
+                .filter(p -> p.getX() < a && p.getX() > b)
+                .collect(Collectors.toList());
+        return forcaBruta(selecionados);
+    }
+
+    private static double forcaBruta(List<Ponto> pontos) {
+        double distancia = Double.MAX_VALUE;
+        for (int i = 0; i < pontos.size(); i++) {
+            for (int j = i + 1; j < pontos.size(); j++) {
+                distancia = getMenorDistancia(distancia, pontos.get(i), pontos.get(j));
             }
         }
-        List<Ponto> pontosRetorno = new ArrayList<>();
-        pontosRetorno.add(pontoA);
-        pontosRetorno.add(pontoB);
-        HashMap<Double, List<Ponto>> retorno = new HashMap<>();
-        retorno.put(menorDistancia, pontosRetorno);
-        return retorno;
+        return distancia;
     }
 
     private static double getMenorDistancia(double menorDistancia, Ponto pontoUm, Ponto pontoDois) {
         double distancia = calcularDistancia(pontoUm, pontoDois);
-
-        // Primeiro caso
-        if (menorDistancia == 0)
-            return distancia;
-
         if (menorDistancia > distancia)
             return distancia;
         return menorDistancia;
