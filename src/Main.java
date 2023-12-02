@@ -1,21 +1,29 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
         List<Ponto> pontos = new ArrayList<>();
-        pontos.add(new Ponto(10, 15));
-        pontos.add(new Ponto(19, 16));
-        pontos.add(new Ponto(1, 3));
-        pontos.add(new Ponto(2, 3));
-        pontos.add(new Ponto(5, 4));
-        pontos.add(new Ponto(12, 5));
 
+        for (int i = 1; i < 1000; i++) {
+            for (int j = 1; j < 100; j++) {
+                pontos.add(new Ponto(i, j));
+            }
+        }
+
+        Collections.shuffle(pontos);
+
+        print("Ingenuo");
+        long startTime = System.currentTimeMillis();
         double temp = ParProximoIngenuo.executar(pontos);
-        double temp_2 = ParProximo.executar(pontos);
-
+        print(System.currentTimeMillis() - startTime + " milisegundos.");
         print("Distancia UM: " + temp);
+
+        print("\nDivisao e conquista");
+        startTime = System.currentTimeMillis();
+        double temp_2 = ParProximo.executar(pontos);
+        print(System.currentTimeMillis() - startTime + " milisegundos.");
         print("Distancia DOIS: " + temp_2);
     }
 

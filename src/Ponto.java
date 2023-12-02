@@ -26,10 +26,7 @@ public class Ponto implements Comparable<Ponto> {
 
     @Override
     public String toString() {
-        return "Ponto{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "Ponto{" + "x=" + x + ", y=" + y + '}';
     }
 
     @Override
