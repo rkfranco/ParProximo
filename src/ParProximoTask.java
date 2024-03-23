@@ -1,26 +1,36 @@
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.RecursiveTask;
 import java.util.stream.Collectors;
 
-public class ParProximo {
+public class ParProximoTask extends RecursiveTask<Double> {
 
-    public static double executar(List<Ponto> pontos) {
-        Collections.sort(pontos);
-        return executarAux(pontos);
+    private final List<Ponto> pontos;
+
+    public ParProximoTask(List<Ponto> pontos) {
+        this.pontos = pontos;
     }
 
-    private static double executarAux(List<Ponto> pontos) {
+    @Override
+    protected Double compute() {
         if (pontos.size() <= 3) return forcaBruta(pontos);
 
         int div = pontos.size() / 2;
+        double menorDistancia = ForkJoinTask
+                .invokeAll(createSubtasks(div)).stream()
+                .mapToDouble(ForkJoinTask::join).min()
+                .orElseThrow(() -> new NullPointerException("Nenhum valor numerico encontrado"));
 
-        double distanciaUM = executarAux(pontos.subList(0, div));
-        double distanciaDois = executarAux(pontos.subList(div, pontos.size()));
+        return Math.min(menorDistancia, menorEntreConjuntos(pontos, menorDistancia, div));
+    }
 
-        double menorDistancia = Math.min(distanciaUM, distanciaDois);
-        double menorEntreConjuntos = menorEntreConjuntos(pontos, menorDistancia, div);
-
-        return Math.min(menorDistancia, menorEntreConjuntos);
+    private Collection<ParProximoTask> createSubtasks(int div) {
+        List<ParProximoTask> dividedTasks = new ArrayList<>();
+        dividedTasks.add(new ParProximoTask(pontos.subList(0, div)));
+        dividedTasks.add(new ParProximoTask(pontos.subList(div, pontos.size())));
+        return dividedTasks;
     }
 
     private static double menorEntreConjuntos(List<Ponto> pontos, double dist, int div) {
