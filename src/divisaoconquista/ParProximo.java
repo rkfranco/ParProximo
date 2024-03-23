@@ -1,6 +1,12 @@
+package divisaoconquista;
+
+import utils.Ponto;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static utils.Utils.getMenorDistanciaOtimizada;
 
 public class ParProximo {
 
@@ -44,7 +50,7 @@ public class ParProximo {
 
         for (int i = 0; i < pontos.size(); i++) {
             for (int j = i + 1; j < pontos.size(); j++) {
-                distancia = Utils.getMenorDistanciaOtimizada(distancia, pontos.get(i), pontos.get(j));
+                distancia = getMenorDistanciaOtimizada(distancia, pontos.get(i), pontos.get(j));
             }
         }
 

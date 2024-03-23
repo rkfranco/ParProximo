@@ -1,3 +1,5 @@
+package utils;
+
 public class Ponto implements Comparable<Ponto> {
     private double x;
 
@@ -26,7 +28,7 @@ public class Ponto implements Comparable<Ponto> {
 
     @Override
     public String toString() {
-        return "Ponto{" + "x=" + x + ", y=" + y + '}';
+        return "Utils.Ponto{" + "x=" + x + ", y=" + y + '}';
     }
 
     @Override

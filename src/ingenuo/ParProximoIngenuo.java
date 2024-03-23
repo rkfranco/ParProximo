@@ -1,3 +1,8 @@
+package ingenuo;
+
+import utils.Ponto;
+import utils.Utils;
+
 import java.util.List;
 
 public class ParProximoIngenuo {

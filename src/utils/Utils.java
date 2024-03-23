@@ -1,3 +1,5 @@
+package utils;
+
 public class Utils {
 
     public static double getMenorDistancia(double menorDistancia, Ponto pontoUm, Ponto pontoDois) {
